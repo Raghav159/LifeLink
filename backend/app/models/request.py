@@ -27,6 +27,8 @@ class BloodRequest(Base):
     )
 
     quantity = Column(Integer, nullable=False)
+    patient_age = Column(Integer, nullable=False)
+    request_hour = Column(Integer, nullable=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

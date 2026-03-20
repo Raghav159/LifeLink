@@ -16,6 +16,8 @@ class RequestBase(BaseModel):
     longitude: float
     urgency_level: UrgencyLevel
     quantity: int = Field(..., gt=0)
+    patient_age: int = Field(..., gt=0)
+    request_hour: int = Field(..., ge=0, le=23)
 
 
 class RequestCreate(RequestBase):

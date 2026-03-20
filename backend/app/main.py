@@ -1,12 +1,29 @@
+import logging
+import joblib
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.db.database import Base, engine
 from app.models import Donor, BloodRequest
 from app.routers import donor, request, match
+from app.core.config import settings, logger
+from app.ml.train import train_model
 
+# Global ML model variable
+ml_model = None
 
 app = FastAPI(
     title="LifeLink API",
-    version="1.0.0"
+    version="1.0.0",
+    description="Blood donor matching platform with ML-powered ranking"
+)
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.FRONTEND_URL, "http://localhost:3000", "http://localhost:8000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(donor.router)
@@ -16,19 +33,43 @@ app.include_router(match.router)
 
 @app.on_event("startup")
 async def startup():
+    """Initialize database and load ML model on startup"""
+    global ml_model
+    
+    logger.info("🚀 Starting LifeLink backend...")
+    
+    # Create tables
     try:
-        # Create tables if they don't exist
         Base.metadata.create_all(bind=engine)
-        print("✅ Tables created successfully.")
+        logger.info("✅ Database tables created/verified")
     except Exception as e:
-        print(f"❌ Error creating tables: {e}")
+        logger.error(f"❌ Error creating tables: {e}")
+        raise
+    
+    # Load or train ML model
+    try:
+        logger.info(f"Loading ML model from {settings.MODEL_PATH}...")
+        ml_model = joblib.load(settings.MODEL_PATH)
+        logger.info("✅ ML model loaded successfully")
+    except FileNotFoundError:
+        logger.warning(f"Model not found at {settings.MODEL_PATH}. Training new model...")
+        try:
+            ml_model = train_model(settings.MODEL_PATH)
+            logger.info("✅ ML model trained and saved")
+        except Exception as e:
+            logger.error(f"❌ Error training model: {e}")
+            raise
 
 
 @app.get("/")
 async def root():
-    return {"message": "LifeLink API is running"}
+    return {
+        "message": "LifeLink API is running",
+        "docs": "/docs",
+        "redoc": "/redoc"
+    }
 
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy"}
+    return {"status": "healthy", "database": "connected"}

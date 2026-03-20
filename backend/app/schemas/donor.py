@@ -14,6 +14,9 @@ class DonorBase(BaseModel):
     last_donation_date: date
     contact_number: str
     health_eligible: bool = True
+    donation_frequency_6m: int = 0
+    successful_previous_matches: int = 0
+    has_adverse_reactions: bool = False
 
 
 class DonorCreate(DonorBase):

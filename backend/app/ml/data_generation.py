@@ -1,78 +1,73 @@
 import numpy as np
-import pandas as pd
+from typing import Tuple
 
 
-# Sigmoid function converts any real number into probability (0–1)
-# Used to simulate logistic regression style probability
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
-
-
-def generate_dataset(n_samples=5000, random_state=42):
+def generate_synthetic_data(n_samples: int = 10000, random_state: int = 42) -> Tuple[np.ndarray, np.ndarray]:
     """
-    Generate synthetic donor behavior dataset.
-
-    n_samples: number of simulated donor-request interactions
-    random_state: ensures reproducibility
+    Generate 10,000 synthetic donor-request pairs with realistic distributions.
+    
+    Features (14 total):
+    - Donor Features (7): distance, days_since_donation, age, is_universal_donor,
+                         donation_frequency_6m, successful_previous_matches, has_adverse_reactions
+    - Request Features (4): urgency_numeric, quantity, patient_age, request_hour
+    - Interaction Features (3): age_compatibility, distance_urgency_score, recency_urgency_score
+    
+    Returns:
+        X: shape (n_samples, 14) — feature matrix
+        y: shape (n_samples,) — binary labels (0 or 1)
     """
-
-    # Set seed so results are reproducible
     np.random.seed(random_state)
-
-    # -------------------------------
-    # Generate input features
-    # -------------------------------
-
-    # Distance between donor and hospital (km)
-    # Donors far away less likely to respond
-    distance = np.random.uniform(0, 25, n_samples)
-
-    # Days since last donation
-    # Higher = more eligible + more likely to respond
-    days_since_donation = np.random.uniform(90, 600, n_samples)
-
-    # Urgency level (1=LOW, 2=MEDIUM, 3=HIGH)
-    # Higher urgency increases response probability
-    urgency = np.random.choice([1, 2, 3], n_samples)
-
-    # Age of donor
-    # Slightly younger donors may respond more
-    age = np.random.uniform(18, 65, n_samples)
-
-    # Whether donor is universal donor (O-)
-    # Universal donors may be contacted more often
-    is_universal = np.random.choice([0, 1], n_samples, p=[0.9, 0.1])
-
-    # -------------------------------
-    # Simulate behavioral logic
-    # -------------------------------
-
-    # Create a linear combination (logit)
-    # These weights simulate real-world influence
-    logit = (
-        -0.12 * distance +              # further distance lowers response
-        0.002 * days_since_donation +  # longer gap increases response
-        0.8 * urgency +                # urgent request increases response
-        0.4 * is_universal -           # universal donor bonus
-        0.015 * age +                  # slight age penalty
-        np.random.normal(0, 0.5, n_samples)  # noise for realism
-    )
-
-    # Convert logit into probability (0–1)
-    probability = sigmoid(logit)
-
-    # Simulate whether donor responded (0 or 1)
-    # This makes dataset realistic (not deterministic)
-    response = np.random.binomial(1, probability)
-
-    # Create dataframe
-    df = pd.DataFrame({
-        "distance": distance,
-        "days_since_donation": days_since_donation,
-        "urgency": urgency,
-        "age": age,
-        "is_universal": is_universal,
-        "response": response
-    })
-
-    return df
+    
+    data = []
+    
+    for _ in range(n_samples):
+        # Donor Features
+        distance_km = np.random.exponential(scale=8)
+        if distance_km > 10:
+            distance_km = 10 + np.random.exponential(1)
+        
+        days_since_donation = int(np.random.gamma(shape=3, scale=40))
+        age = int(np.random.normal(40, 15))
+        age = np.clip(age, 18, 65)
+        
+        is_universal_donor = 1 if np.random.rand() < 0.15 else 0  # 15% O-
+        donation_frequency_6m = int(np.random.poisson(lam=2))
+        successful_previous_matches = int(np.random.beta(5, 2) * 20)
+        has_adverse_reactions = 1 if np.random.rand() < 0.05 else 0
+        
+        # Request Features
+        urgency_numeric = np.random.choice([1, 2, 3], p=[0.3, 0.5, 0.2])
+        quantity_ml = int(np.random.normal(450, 50))
+        quantity_ml = np.clip(quantity_ml, 300, 600)
+        patient_age = int(np.random.normal(40, 20))
+        patient_age = np.clip(patient_age, 1, 100)
+        request_hour = np.random.randint(0, 24)
+        
+        # Interaction Features
+        age_compatibility = abs(age - patient_age)
+        distance_urgency_score = distance_km / urgency_numeric
+        recency_urgency_score = days_since_donation * urgency_numeric
+        
+        features = [
+            distance_km, days_since_donation, age, is_universal_donor,
+            donation_frequency_6m, successful_previous_matches, has_adverse_reactions,
+            urgency_numeric, quantity_ml, patient_age, request_hour,
+            age_compatibility, distance_urgency_score, recency_urgency_score
+        ]
+        
+        data.append(features)
+    
+    # Create labels: 75% positive, 25% negative
+    y = np.random.choice([0, 1], size=n_samples, p=[0.25, 0.75])
+    
+    # Apply domain logic: bad combinations → label 0
+    X = np.array(data)
+    for i in range(n_samples):
+        if X[i, 0] > 10:  # distance > 10km
+            y[i] = 0
+        if X[i, 1] < 90:  # days_since_donation < 90
+            y[i] = 0
+        if X[i, 12] > 10:  # distance_urgency_score > 10
+            y[i] = 0
+    
+    return X, y

@@ -22,5 +22,10 @@ class Donor(Base):
 
     contact_number = Column(String(15), nullable=False)
     health_eligible = Column(Boolean, default=True)
+    
+    # ML-related fields
+    donation_frequency_6m = Column(Integer, default=0)
+    successful_previous_matches = Column(Integer, default=0)
+    has_adverse_reactions = Column(Boolean, default=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
