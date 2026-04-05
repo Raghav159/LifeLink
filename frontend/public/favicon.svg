@@ -1,0 +1,10 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bloodGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c56;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c41e3a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <path d="M 100 30 C 100 30, 70 80, 70 115 C 70 145, 83 160, 100 160 C 117 160, 130 145, 130 115 C 130 80, 100 30, 100 30 Z" fill="url(#bloodGradient)" stroke="#8b1428" stroke-width="2"/>
+  <text x="100" y="130" font-size="48" font-weight="bold" text-anchor="middle" fill="white" font-family="Arial, sans-serif">LL</text>
+</svg>
