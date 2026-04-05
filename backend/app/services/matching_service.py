@@ -165,16 +165,46 @@ def match_donors(
         result = DonorMatchResult(
             donor_id=donor.id,
             name=donor.name,
+            age=donor.age,
             blood_group=donor.blood_group,
+            contact_number=donor.contact_number,
+            latitude=donor.latitude,
+            longitude=donor.longitude,
             distance_km=round(distance, 2),
-            ml_score=round(ml_score, 4)
+            ml_score=round(ml_score, 4),
+            last_donation_date=donor.last_donation_date.isoformat() if donor.last_donation_date else None,
+            health_eligible=donor.health_eligible,
+            available=donor.available,
+            donation_frequency_6m=donor.donation_frequency_6m,
+            successful_previous_matches=donor.successful_previous_matches,
+            has_adverse_reactions=donor.has_adverse_reactions
         )
         results.append(result)
     
     logger.info(f"Eligible donors: {eligible_count}")
     
-    # 5. Sort by ml_score descending
-    results.sort(key=lambda x: x.ml_score, reverse=True)
+    # 5. Calculate combined ranking score (70% ML score + 30% distance proximity)
+    # Normalize distance to 0-1 scale (0 is closest, 1 is farthest)
+    if results:
+        max_distance = max(r.distance_km for r in results) if results else 10
+        
+        # Create list of (result, combined_score) tuples for sorting
+        scored_results = []
+        for result in results:
+            # Distance score: 1.0 = closest, 0.0 = farthest
+            distance_score = 1.0 - (result.distance_km / max(max_distance, 10))
+            
+            # Combined ranking: prioritize ML score but also consider proximity
+            # 70% weight to ML score, 30% weight to distance proximity
+            combined_score = (result.ml_score * 0.70) + (distance_score * 0.30)
+            
+            scored_results.append((result, combined_score))
+            logger.debug(f"Donor {result.name}: ML={result.ml_score:.2f}, Distance={result.distance_km}km, "
+                        f"DistScore={distance_score:.2f}, Combined={combined_score:.3f}")
+        
+        # Sort by combined score (best matches first)
+        scored_results.sort(key=lambda x: x[1], reverse=True)
+        results = [item[0] for item in scored_results]
     
     # Return top 20
     top_results = results[:20]

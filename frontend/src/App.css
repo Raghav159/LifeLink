@@ -1,0 +1,31 @@
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  margin-top: auto;
+  border-top: 2px solid #c41e3a;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}

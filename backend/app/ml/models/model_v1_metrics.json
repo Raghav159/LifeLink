@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-04-05T12:39:32.754016",
+  "model_type": "XGBClassifier",
+  "best_params": {
+    "learning_rate": 0.05,
+    "max_depth": 6,
+    "n_estimators": 200
+  },
+  "best_cv_f1": 0.8608591823919729,
+  "metrics": {
+    "accuracy": 0.872,
+    "precision": 0.7224669603524229,
+    "recall": 0.9939393939393939,
+    "f1": 0.8367346938775511,
+    "roc_auc": 0.9068701944821347,
+    "confusion_matrix": [
+      [
+        544,
+        126
+      ],
+      [
+        2,
+        328
+      ]
+    ]
+  },
+  "feature_count": 14,
+  "features": [
+    "distance_km",
+    "days_since_donation",
+    "age",
+    "is_universal_donor",
+    "donation_frequency_6m",
+    "successful_previous_matches",
+    "has_adverse_reactions",
+    "urgency_numeric",
+    "quantity_ml",
+    "patient_age",
+    "request_hour",
+    "age_compatibility",
+    "distance_urgency_score",
+    "recency_urgency_score"
+  ]
+}
