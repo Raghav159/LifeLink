@@ -1,0 +1,25 @@
+version: '3.9'
+
+# Development overrides for docker-compose.yml
+# Run with: docker-compose -f docker-compose.yml -f docker-compose.override.yml up
+
+services:
+  backend:
+    environment:
+      DEBUG: "true"
+      APP_ENV: development
+      LOG_LEVEL: debug
+    volumes:
+      - ./backend:/app
+    command: >
+      bash -c "pip install -e . && 
+               uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  frontend:
+    environment:
+      VITE_API_URL: http://localhost:8000
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"

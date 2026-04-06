@@ -1,0 +1,56 @@
+version: '3.9'
+
+# Production configuration
+# Run with: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  database:
+    # Use a named volume for persistent storage
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  backend:
+    restart: always
+    environment:
+      DEBUG: "false"
+      APP_ENV: production
+      LOG_LEVEL: warning
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    # Remove volumes for production
+    volumes: []
+
+  frontend:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    # Remove volumes for production
+    volumes: []
+
+volumes:
+  postgres_data_prod:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
