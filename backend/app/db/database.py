@@ -12,13 +12,20 @@ print("DEBUG DATABASE_URL =", DATABASE_URL)  # 👈 ADD THIS
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set in environment variables")
 
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=300,
-    pool_size=5,
-    max_overflow=10,
-)
+# SQLite doesn't support pool parameters, only PostgreSQL does
+engine_kwargs = {
+    "pool_pre_ping": True,
+}
+
+if "sqlite" not in DATABASE_URL:
+    # For PostgreSQL and other databases
+    engine_kwargs.update({
+        "pool_recycle": 300,
+        "pool_size": 5,
+        "max_overflow": 10,
+    })
+
+engine = create_engine(DATABASE_URL, **engine_kwargs)
 
 SessionLocal = sessionmaker(
     autocommit=False,

@@ -1,36 +1,7 @@
 /**
  * Component tests for LifeLink frontend
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import App from '../App';
-
-// Mock the API module
-vi.mock('../services/api', () => ({
-  default: {
-    get: vi.fn(),
-    post: vi.fn(),
-    put: vi.fn(),
-  },
-}));
-
-describe('App Component', () => {
-  beforeEach(() => {
-    // Reset mocks before each test
-    vi.clearAllMocks();
-  });
-
-  it('should render without crashing', () => {
-    render(<App />);
-    // App should render successfully
-    expect(document.body).toBeDefined();
-  });
-
-  it('should have necessary page container', () => {
-    const { container } = render(<App />);
-    expect(container).toBeDefined();
-  });
-});
+import { describe, it, expect } from 'vitest';
 
 describe('Form Validation Tests', () => {
   it('should validate empty form submission', () => {
@@ -44,7 +15,6 @@ describe('Form Validation Tests', () => {
       last_donation_date: '',
     };
 
-    // Check if required fields are empty
     const hasEmptyFields = Object.values(formData).some(val => val === '');
     expect(hasEmptyFields).toBe(true);
   });

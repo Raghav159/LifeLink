@@ -1,0 +1,236 @@
+from pathlib import Path
+
+content = """LIFELINK CI/CD DEMO CHECKLIST
+
+========================
+1. START DOCKER
+========================
+sudo systemctl start docker
+docker ps
+
+========================
+2. START JENKINS
+========================
+docker start jenkins
+
+Open: http://localhost:8080
+
+========================
+3. VERIFY DOCKER ACCESS
+========================
+docker exec jenkins docker ps
+if no ACCESS
+docker exec -u root -it jenkins bash                                                                                                                                                                                 py ml-env at 13:21:21
+usermod -aG docker jenkins
+chmod 666 /var/run/docker.sock
+exit
+
+
+========================
+4. RUN PIPELINE
+========================
+Go to Jenkins → lifelink-pipeline → Build Now
+
+(Optional) Open Blue Ocean for visual demo
+
+========================
+5. SHOW APPLICATION
+========================
+Frontend: http://localhost:3000
+Backend:  http://localhost:8000
+
+docker ps  (to show containers)
+
+========================
+6. IF CONTAINERS NOT RUNNING
+========================
+Run pipeline again OR manually:
+
+docker rm -f backend frontend || true
+
+docker run -d -p 8000:8000 --name backend lifelink-backend:v1
+docker run -d -p 3000:80 --name frontend lifelink-frontend:v1
+
+========================
+7. DEMO EXPLANATION
+========================
+Say:
+
+1. Code is pushed to GitHub
+2. Jenkins pipeline is triggered
+3. It builds Docker images
+4. Then deploys containers
+5. Application is live
+
+========================
+8. IF SOMETHING BREAKS
+========================
+Restart Jenkins:
+docker restart jenkins
+
+Check containers:
+docker ps -a
+
+Remove & rerun:
+docker rm -f backend frontend
+
+Perfect — this is your **FINAL pre-demo checklist (2-minute version)** 🔥
+Follow this tomorrow and you’ll look super confident.
+
+
+# ✅ 1. Start Docker
+
+```bash
+sudo systemctl start docker
+```
+
+---
+
+# ✅ 2. Start Jenkins
+
+```bash
+docker start jenkins
+```
+
+---
+
+# 🌐 3. Open Jenkins
+
+👉 [http://localhost:8080](http://localhost:8080)
+
+(wait ~30 sec)
+
+---
+
+# ✅ 4. Verify Docker works inside Jenkins (CRITICAL)
+
+```bash
+docker exec jenkins docker ps
+```
+
+👉 If this works → you’re SAFE
+👉 If error → restart Jenkins:
+
+```bash
+docker restart jenkins
+```
+
+---
+
+# ✅ 5. Ensure NO app containers running (IMPORTANT)
+
+```bash
+docker ps
+```
+
+👉 Should NOT show:
+
+* backend
+* frontend
+
+---
+
+# 🎯 WHY?
+
+You want to show:
+
+```text
+pipeline → builds → deploys → runs app
+```
+
+---
+
+# 🚀 6. Open Pipeline Job
+
+👉 Jenkins → `lifelink-pipeline`
+
+---
+
+# ▶️ 7. Start Demo
+
+Click:
+👉 **Build Now**
+
+---
+
+# 🌊 8. Open Blue Ocean
+
+👉 Show:
+
+```text
+Build Backend ✔
+Build Frontend ✔
+Run Containers ✔
+```
+
+🔥 This is your main highlight
+
+---
+
+# 🐳 9. Show Docker Images
+
+```bash
+docker images
+```
+
+👉 Say:
+
+```text
+"These images were created by the pipeline"
+```
+
+---
+
+# 🐳 10. Show Running Containers
+
+```bash
+docker ps
+```
+
+👉 Show:
+
+* backend
+* frontend
+
+---
+
+# 🌐 11. Show App
+
+👉 [http://localhost:3000](http://localhost:3000)
+👉 [http://localhost:8000](http://localhost:8000)
+
+---
+
+# 🎤 12. Say This (VERY IMPORTANT)
+
+```text
+"This demonstrates the full CI/CD pipeline:
+Code from GitHub → Jenkins builds Docker images → containers are deployed → application runs."
+```
+
+---
+
+# 🚨 QUICK BACKUP (IF SOMETHING FAILS)
+
+## Reset containers:
+
+```bash
+docker rm -f backend frontend
+```
+
+👉 Then click **Build Now again**
+
+---
+
+# FINAL FLOW 
+
+```text
+1. Start Jenkins
+2. Show pipeline
+3. Run pipeline
+4. Show Docker images
+5. Show containers
+6. Show app
+```
+
+
