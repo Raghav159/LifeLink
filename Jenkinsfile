@@ -15,8 +15,8 @@ pipeline {
                 echo "🧪 Running Backend Tests..."
                 sh '''
                 cd backend
-                python3 -m pip install --quiet -r requirements.txt
-                python3 -m pytest --cov=app --cov-report=xml --cov-report=html --junit-xml=test-results.xml || true
+                /opt/venv/bin/pip install --quiet -r requirements.txt
+                /opt/venv/bin/pytest --cov=app --cov-report=xml --cov-report=html --junit-xml=test-results.xml || true
                 '''
             }
         }
