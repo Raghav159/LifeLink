@@ -13,9 +13,14 @@ pipeline {
         stage('Backend Unit Tests') {
             steps {
                 echo "🧪 Running Backend Tests in Docker..."
-                sh """
-                docker run --rm -v \$(pwd):/app -w /app/backend python:3.11-slim bash -c "ls && pip install --no-cache-dir -r requirements.txt && pytest --cov=app --cov-report=xml --cov-report=html --junit-xml=test-results.xml"
-                """
+                sh '''
+                docker run --rm -v $(pwd):/app python:3.11-slim bash -c "
+                cd /app/backend &&
+                ls &&
+                pip install --no-cache-dir -r requirements.txt &&
+                pytest --cov=app --cov-report=xml --cov-report=html --junit-xml=test-results.xml
+                "
+                '''
             }
         }
 
