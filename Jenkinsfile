@@ -12,11 +12,16 @@ pipeline {
 
         stage('Backend Unit Tests') {
             steps {
-                echo "🧪 Running Backend Tests..."
+                echo "🧪 Running Backend Tests in Docker..."
                 sh '''
-                cd backend
-                /opt/venv/bin/pip install --quiet -r requirements.txt
-                /opt/venv/bin/pytest --cov=app --cov-report=xml --cov-report=html --junit-xml=test-results.xml || true
+                docker run --rm \
+                -v $(pwd):/app \
+                -w /app/backend \
+                python:3.11-slim \
+                sh -c "
+                pip install --no-cache-dir -r requirements.txt &&
+                pytest --cov=app --cov-report=xml --cov-report=html --junit-xml=test-results.xml
+                "
                 '''
             }
         }
