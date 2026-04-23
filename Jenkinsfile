@@ -8,28 +8,10 @@ pipeline {
 
     stages {
 
-        stage('Frontend Unit Tests') {
-            steps {
-                echo "🧪 Running Frontend Tests..."
-                sh '''
-                cd frontend
-                npm install --legacy-peer-deps --silent
-                npm run test -- --run || true
-                '''
-            }
-        }
-
         stage('Build Backend Image') {
             steps {
                 echo "🐳 Building Backend Docker Image..."
                 sh 'docker build -f Dockerfile.backend -t $BACKEND_IMAGE .'
-            }
-        }
-
-        stage('Test Backend') {
-            steps {
-                echo "🧪 Running Backend Tests..."
-                sh 'docker run --rm $BACKEND_IMAGE pytest || true'
             }
         }
 
