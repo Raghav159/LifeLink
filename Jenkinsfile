@@ -1,34 +1,36 @@
 pipeline {
     agent any
 
+    environment {
+        BACKEND_IMAGE = "lifelink-backend:v1"
+        FRONTEND_IMAGE = "lifelink-frontend:v1"
+    }
+
     stages {
 
-        stage('Verify Docker') {
+        stage('Build Backend Image') {
             steps {
-                echo "🔍 Checking Docker..."
-                sh 'docker --version'
-                sh 'docker-compose --version'
+                echo "🐳 Building Backend Docker Image..."
+                sh 'docker build -f Dockerfile.backend -t $BACKEND_IMAGE .'
             }
         }
 
-        stage('Build & Deploy') {
+        stage('Build Frontend Image') {
             steps {
-                echo "🚀 Running Docker Compose..."
-
-                sh '''
-                cd $WORKSPACE
-
-                docker-compose down || true
-                docker-compose up --build -d
-                '''
+                echo "🐳 Building Frontend Docker Image..."
+                sh 'docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .'
             }
         }
 
-        stage('Health Check') {
+        stage('Run Containers') {
             steps {
+                echo "🚀 Starting Containers..."
                 sh '''
-                sleep 10
-                curl -f http://localhost:8000/health || exit 1
+                docker rm -f backend || true
+                docker rm -f frontend || true
+
+                docker run -d -p 8000:8000 --name backend $BACKEND_IMAGE
+                docker run -d -p 3000:80 --name frontend $FRONTEND_IMAGE
                 '''
             }
         }
