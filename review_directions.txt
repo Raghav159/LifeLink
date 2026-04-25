@@ -1,0 +1,165 @@
+
+
+# 🚀 AFTER `docker images` (host)
+
+---
+minikube start --driver=docker
+
+## 🟢 1. Switch to Minikube Docker
+
+```bash
+eval $(minikube docker-env)
+```
+
+---
+
+## 🟢 2. Rebuild images inside Minikube
+
+```bash
+docker build -f Dockerfile.backend -t lifelink-backend:v1 .
+docker build -f Dockerfile.frontend -t lifelink-frontend:v1 .
+```
+
+---
+
+## 🟢 3. Verify images (inside Minikube)
+
+```bash
+docker images
+```
+
+👉 Must show:
+
+```
+lifelink-backend
+lifelink-frontend
+```
+
+---
+
+## 🟢 4. Deploy to Kubernetes
+
+```bash
+kubectl apply -f k8s/
+```
+
+---
+
+## 🟢 5. Verify deployment
+
+```bash
+kubectl get pods
+kubectl get services
+```
+
+👉 Must show:
+
+* backend → Running
+* frontend → Running
+
+---
+
+## 🟢 6. Run app (port-forward)
+
+```bash
+kubectl port-forward service/frontend-service 4000:3000
+```
+
+---
+
+## 🟢 7. Open app
+
+```
+http://localhost:4000
+```
+---
+
+Perfect — this is your **30-second reset + redeploy flow (demo-safe)** 🔥
+Use this if something breaks right before or during demo.
+
+---
+
+# 🚀 ⚡ 30-SECOND CLEAN + REDEPLOY
+
+## 🧹 1. Clean Kubernetes (remove old pods/services)
+
+```bash
+kubectl delete deployment backend frontend || true
+kubectl delete service backend-service frontend-service || true
+```
+
+---
+
+## 🔄 2. Switch to Minikube Docker
+
+```bash
+eval $(minikube docker-env)
+```
+
+---
+
+## 🐳 3. Rebuild images (fresh code)
+
+```bash
+docker build -f Dockerfile.backend -t lifelink-backend:v1 .
+docker build -f Dockerfile.frontend -t lifelink-frontend:v1 .
+```
+
+---
+
+## ☸️ 4. Redeploy
+
+```bash
+kubectl apply -f k8s/
+```
+
+---
+
+## 🔍 5. Quick check (optional but good)
+
+```bash
+kubectl get pods
+```
+
+(wait until both are `Running`)
+
+---
+
+## 🌐 6. Run app
+
+```bash
+kubectl port-forward service/frontend-service 4000:3000
+```
+
+Open:
+
+```
+http://localhost:4000
+```
+
+---
+
+
+# 🧠 Super-short memory version
+
+```bash
+kubectl delete deployment backend frontend || true
+kubectl delete service backend-service frontend-service || true
+eval $(minikube docker-env)
+docker build -f Dockerfile.backend -t lifelink-backend:v1 .
+docker build -f Dockerfile.frontend -t lifelink-frontend:v1 .
+kubectl apply -f k8s/
+kubectl port-forward service/frontend-service 4000:3000
+```
+
+---
+
+# ⚠️ Pro tip (IMPORTANT)
+
+If pods don’t start:
+
+```bash
+kubectl describe pod <pod-name>
+kubectl logs <pod-name>
+```
+
