@@ -16,4 +16,4 @@ spec:
       - name: frontend
         image: lifelink-frontend:v1
         ports:
-        - containerPort: 80
+        - containerPort: 3000
