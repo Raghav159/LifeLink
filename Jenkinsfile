@@ -1,36 +1,36 @@
 pipeline {
     agent any
 
-    environment {
-        BACKEND_IMAGE = "lifelink-backend:v1"
-        FRONTEND_IMAGE = "lifelink-frontend:v1"
-    }
-
     stages {
 
-        stage('Build Backend Image') {
+        stage('Verify Docker') {
             steps {
-                echo "🐳 Building Backend Docker Image..."
-                sh 'docker build -f Dockerfile.backend -t $BACKEND_IMAGE .'
+                echo "🔍 Checking Docker..."
+                sh 'docker --version'
+                sh 'docker compose version'
             }
         }
 
-        stage('Build Frontend Image') {
+        stage('Build & Deploy') {
             steps {
-                echo "🐳 Building Frontend Docker Image..."
-                sh 'docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .'
-            }
-        }
+                echo "🚀 Running Docker Compose..."
 
-        stage('Run Containers') {
-            steps {
-                echo "🚀 Starting Containers..."
                 sh '''
-                docker rm -f backend || true
-                docker rm -f frontend || true
+                cd $WORKSPACE
 
-                docker run -d -p 8000:8000 --name backend $BACKEND_IMAGE
-                docker run -d -p 3000:80 --name frontend $FRONTEND_IMAGE
+                docker compose down || true
+                docker compose up --build -d
+                '''
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                echo "🧪 Checking if backend is running..."
+
+                sh '''
+                sleep 10
+                curl -f http://localhost:8000/health || exit 1
                 '''
             }
         }
@@ -38,7 +38,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ CI/CD Pipeline Successful"
+            echo "✅ CI/CD Pipeline Successful - App is running!"
         }
         failure {
             echo "❌ CI/CD Pipeline Failed"
