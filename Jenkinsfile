@@ -7,7 +7,7 @@ pipeline {
             steps {
                 echo "🔍 Checking Docker..."
                 sh 'docker --version'
-                sh 'docker compose version'
+                sh 'docker-compose --version'
             }
         }
 
@@ -18,16 +18,14 @@ pipeline {
                 sh '''
                 cd $WORKSPACE
 
-                docker compose down || true
-                docker compose up --build -d
+                docker-compose down || true
+                docker-compose up --build -d
                 '''
             }
         }
 
         stage('Health Check') {
             steps {
-                echo "🧪 Checking if backend is running..."
-
                 sh '''
                 sleep 10
                 curl -f http://localhost:8000/health || exit 1
@@ -38,7 +36,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ CI/CD Pipeline Successful - App is running!"
+            echo "✅ CI/CD Pipeline Successful"
         }
         failure {
             echo "❌ CI/CD Pipeline Failed"
