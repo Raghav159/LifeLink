@@ -1,60 +1,212 @@
 .navbar {
-  background: linear-gradient(135deg, #c41e3a 0%, #8b1428 100%);
-  padding: 1rem 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0.9rem 0;
   position: sticky;
-  top: 0;
-  z-index: 100;
+  top: 8px;
+  z-index: 120;
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0.75rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 999px;
+  gap: 0.65rem;
 }
 
 .logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: white;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
   text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
-.logo:hover {
-  transform: scale(1.05);
+.logo-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #fff;
+  background: var(--gradient-primary);
 }
 
 .nav-menu {
   display: flex;
   list-style: none;
-  gap: 2rem;
+  gap: 0.35rem;
   margin: 0;
   padding: 0;
+  flex: 1;
+  justify-content: center;
 }
 
 .nav-link {
-  color: white;
+  color: var(--text-secondary);
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
+  font-weight: 600;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
 
 .nav-link:hover {
-  color: #ffd700;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.nav-link.active {
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+}
+
+.navbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-toggle {
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  padding: 0;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.8rem;
+  height: 2.6rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+}
+
+.theme-toggle-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(209, 233, 255, 0.68));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.45rem;
+  transition: background 0.25s ease;
+}
+
+.theme-toggle-dark .theme-toggle-track {
+  background: linear-gradient(135deg, #273247 0%, #0f172a 100%);
+}
+
+.theme-toggle-icon {
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.theme-toggle-icon-sun {
+  color: #f59e0b;
+  opacity: 0.9;
+}
+
+.theme-toggle-icon-moon {
+  color: #e2e8f0;
+  opacity: 0.75;
+}
+
+.theme-toggle-dark .theme-toggle-icon-sun {
+  opacity: 0.75;
+}
+
+.theme-toggle-dark .theme-toggle-icon-moon {
+  opacity: 0.95;
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 0.22rem;
+  left: 0.22rem;
+  width: 2.02rem;
+  height: 2.02rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff, rgba(255, 255, 255, 0.82));
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.2);
+  transform: translateX(0);
+  transition: transform 0.28s ease, background 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  z-index: 3;
+}
+
+.theme-toggle-dark .theme-toggle-thumb {
+  transform: translateX(2.15rem);
+  background: linear-gradient(180deg, #f8fafc, #cbd5e1);
+  color: #475569;
+}
+
+.theme-thumb-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.emergency-btn {
+  white-space: nowrap;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
   .navbar-container {
     flex-direction: column;
-    gap: 1rem;
+    border-radius: 22px;
+    align-items: stretch;
+    padding: 0.8rem;
   }
 
   .nav-menu {
-    gap: 1rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .navbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .emergency-btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .theme-toggle {
+    min-width: 4.5rem;
+    height: 2.45rem;
+  }
+
+  .theme-toggle-thumb {
+    width: 1.9rem;
+    height: 1.9rem;
+    top: 0.22rem;
+  }
+
+  .theme-toggle-dark .theme-toggle-thumb {
+    transform: translateX(2rem);
   }
 }

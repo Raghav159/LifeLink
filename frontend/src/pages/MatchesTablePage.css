@@ -3,16 +3,16 @@
   margin: 0 auto;
   padding: 2rem 1rem;
   min-height: 100vh;
-  background: #f5f5f5;
+  background: transparent;
 }
 
 .matches-header {
-  background: linear-gradient(135deg, #c41e3a 0%, #8b1428 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: #fff;
   padding: 1.5rem 2rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.2);
+  box-shadow: var(--shadow-1);
 }
 
 .header-content h1 {
@@ -28,16 +28,17 @@
 }
 
 .request-info code {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   padding: 0.2rem 0.5rem;
-  border-radius: 3px;
+  border-radius: 6px;
   font-family: monospace;
 }
 
 .table-wrapper {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--surface-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
   overflow: hidden;
   margin-bottom: 2rem;
 }
@@ -49,17 +50,17 @@
 }
 
 .matches-table thead {
-  background: #f8f9fa;
-  border-bottom: 2px solid #ddd;
+  background: var(--surface);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .matches-table th {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   white-space: nowrap;
-  border-right: 1px solid #e9ecef;
+  border-right: 1px solid var(--glass-border);
 }
 
 .matches-table th:last-child {
@@ -67,12 +68,12 @@
 }
 
 .matches-table tbody tr {
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--glass-border);
   transition: background-color 0.15s ease;
 }
 
 .matches-table tbody tr:hover {
-  background: #f9f9f9;
+  background: rgba(148, 163, 184, 0.12);
 }
 
 .matches-table tbody tr.top-match {
@@ -86,7 +87,8 @@
 .matches-table td {
   padding: 1rem;
   vertical-align: middle;
-  border-right: 1px solid #e9ecef;
+  border-right: 1px solid var(--glass-border);
+  color: var(--text-secondary);
 }
 
 .matches-table td:last-child {
@@ -95,10 +97,10 @@
 
 .rank-badge {
   display: inline-block;
-  background: #c41e3a;
-  color: white;
+  background: var(--gradient-primary);
+  color: #fff;
   padding: 0.3rem 0.6rem;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 600;
   min-width: 50px;
@@ -106,17 +108,17 @@
 }
 
 .rank-badge.top {
-  background: #c41e3a;
+  background: var(--gradient-primary);
 }
 
 .name-cell {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .score-pill {
   display: inline-block;
-  color: white;
+  color: #fff;
   padding: 0.4rem 0.8rem;
   border-radius: 20px;
   font-weight: 600;
@@ -136,11 +138,11 @@
 }
 
 .btn-contact-donor {
-  background: #c41e3a;
-  color: white;
+  background: var(--gradient-primary);
+  color: #fff;
   border: none;
   padding: 0.5rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 999px;
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.2s ease;
@@ -149,7 +151,7 @@
 }
 
 .btn-contact-donor:hover {
-  background: #8b1428;
+  filter: brightness(0.95);
   transform: scale(1.05);
 }
 
@@ -160,11 +162,11 @@
 }
 
 .btn-secondary {
-  background: #e9ecef;
-  color: #333;
-  border: none;
+  background: var(--surface-strong);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
   padding: 0.7rem 2rem;
-  border-radius: 6px;
+  border-radius: 999px;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.95rem;
@@ -172,27 +174,36 @@
 }
 
 .btn-secondary:hover {
-  background: #c41e3a;
-  color: white;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
   transform: translateY(-1px);
 }
 
 .no-matches {
-  background: white;
-  border-radius: 8px;
+  background: var(--surface-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
   padding: 3rem 2rem;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-1);
 }
 
 .no-matches h2 {
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 .no-matches p {
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
+}
+
+.no-match-hints {
+  display: inline-flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 /* Responsive */
