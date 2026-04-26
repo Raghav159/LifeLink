@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../services/api";
+import DonorDetailsModal from "./DonorDetailsModal";
 import "./MatchResults.css";
 
 export default function MatchResults() {
@@ -8,6 +9,7 @@ export default function MatchResults() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [selectedDonor, setSelectedDonor] = useState(null);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -47,9 +49,9 @@ export default function MatchResults() {
   };
 
   const getScoreBadge = (score) => {
-    if (score >= 0.8) return "🟢 Excellent";
-    if (score >= 0.6) return "🟡 Good";
-    return "🔴 Fair";
+    if (score >= 0.8) return "Excellent";
+    if (score >= 0.6) return "Good";
+    return "Fair";
   };
 
   return (
@@ -110,7 +112,7 @@ export default function MatchResults() {
                 </div>
 
                 <div className="card-footer">
-                  <button className="btn btn-contact">
+                  <button className="btn btn-contact" onClick={() => setSelectedDonor(match)}>
                     📞 Contact Donor
                   </button>
                 </div>
@@ -125,6 +127,11 @@ export default function MatchResults() {
           <p>🔍 No donors found. Try adjusting your search criteria.</p>
         </div>
       )}
+
+      <DonorDetailsModal 
+        donor={selectedDonor} 
+        onClose={() => setSelectedDonor(null)} 
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 .map-picker {
-  margin: 1.5rem 0;
+  margin: 1rem 0;
 }
 
 .map-header {
@@ -10,7 +10,7 @@
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .map-wrapper {
@@ -19,27 +19,27 @@
 }
 
 .map-container {
-  height: 400px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 2px solid #e0e0e0;
+  height: 360px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--glass-border);
   position: relative;
   z-index: 1;
 }
 
 .btn-geolocation {
   position: absolute;
-  top: 50px;
-  right: 50px;
-  background: linear-gradient(135deg, #c41e3a 0%, #8b1428 100%);
+  top: 12px;
+  right: 12px;
+  background: var(--gradient-primary);
   color: white;
   border: none;
   padding: 0.6rem 1rem;
-  border-radius: 6px;
+  border-radius: 999px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+  box-shadow: 0 12px 20px rgba(209, 29, 79, 0.3);
   font-size: 0.9rem;
   z-index: 400;
 }
@@ -54,17 +54,17 @@
 }
 
 .map-info {
-  background: #f5f5f5;
+  background: var(--surface-strong);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 14px;
   margin-top: 1rem;
-  border-left: 4px solid #c41e3a;
+  border-left: 4px solid var(--primary);
 }
 
 .map-info p {
   margin: 0.5rem 0;
   font-size: 0.95rem;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .leaflet-container {
