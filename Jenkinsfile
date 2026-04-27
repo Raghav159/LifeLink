@@ -8,41 +8,29 @@ pipeline {
 
     stages {
 
-        stage('Build Images in Minikube') {
+        stage('Build Backend Image') {
             steps {
-                echo "🐳 Building Images inside Minikube..."
-
-                sh '''
-                # Switch to Minikube Docker
-                eval $(minikube docker-env)
-
-                # Build images
-                docker build -f Dockerfile.backend -t $BACKEND_IMAGE .
-                docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .
-                '''
+                echo "🐳 Building Backend Docker Image..."
+                sh 'docker build -f Dockerfile.backend -t $BACKEND_IMAGE .'
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Build Frontend Image') {
             steps {
-                echo "☸️ Deploying to Kubernetes..."
-
-                sh '''
-                kubectl apply -f k8s/
-
-                kubectl rollout restart deployment backend || true
-                kubectl rollout restart deployment frontend || true
-                '''
+                echo "🐳 Building Frontend Docker Image..."
+                sh 'docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .'
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Run Containers') {
             steps {
-                echo "🔍 Checking pods..."
-
+                echo "🚀 Starting Containers..."
                 sh '''
-                kubectl get pods
-                kubectl get services
+                docker rm -f backend || true
+                docker rm -f frontend || true
+
+                docker run -d -p 8000:8000 --name backend $BACKEND_IMAGE
+                docker run -d -p 3000:80 --name frontend $FRONTEND_IMAGE
                 '''
             }
         }
@@ -50,7 +38,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ CI/CD Pipeline Successful (Auto Deployed to K8s)"
+            echo "✅ CI/CD Pipeline Successful"
         }
         failure {
             echo "❌ CI/CD Pipeline Failed"
