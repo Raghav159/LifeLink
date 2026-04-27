@@ -8,29 +8,41 @@ pipeline {
 
     stages {
 
-        stage('Build Backend Image') {
+        stage('Build Images in Minikube') {
             steps {
-                echo "🐳 Building Backend Docker Image..."
-                sh 'docker build -f Dockerfile.backend -t $BACKEND_IMAGE .'
-            }
-        }
+                echo "🐳 Building Images inside Minikube..."
 
-        stage('Build Frontend Image') {
-            steps {
-                echo "🐳 Building Frontend Docker Image..."
-                sh 'docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .'
-            }
-        }
-
-        stage('Run Containers') {
-            steps {
-                echo "🚀 Starting Containers..."
                 sh '''
-                docker rm -f backend || true
-                docker rm -f frontend || true
+                # Switch to Minikube Docker
+                eval $(minikube docker-env)
 
-                docker run -d -p 8000:8000 --name backend $BACKEND_IMAGE
-                docker run -d -p 3000:80 --name frontend $FRONTEND_IMAGE
+                # Build images
+                docker build -f Dockerfile.backend -t $BACKEND_IMAGE .
+                docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .
+                '''
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo "☸️ Deploying to Kubernetes..."
+
+                sh '''
+                kubectl apply -f k8s/
+
+                kubectl rollout restart deployment backend || true
+                kubectl rollout restart deployment frontend || true
+                '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                echo "🔍 Checking pods..."
+
+                sh '''
+                kubectl get pods
+                kubectl get services
                 '''
             }
         }
@@ -38,7 +50,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ CI/CD Pipeline Successful"
+            echo "✅ CI/CD Pipeline Successful (Auto Deployed to K8s)"
         }
         failure {
             echo "❌ CI/CD Pipeline Failed"
