@@ -8,13 +8,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                echo "📥 Cloning Repository..."
-                git 'https://github.com/Raghav159/LifeLink'
-            }
-        }
-
         stage('Build Backend Image') {
             steps {
                 echo "🐳 Building Backend Docker Image..."
@@ -37,7 +30,7 @@ pipeline {
                 docker rm -f frontend || true
 
                 docker run -d -p 8000:8000 --name backend $BACKEND_IMAGE
-                docker run -d -p 3000:80 --name frontend $FRONTEND_IMAGE
+                docker run -d -p 3000:3000 --name frontend $FRONTEND_IMAGE
                 '''
             }
         }
