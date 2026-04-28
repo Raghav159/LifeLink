@@ -8,6 +8,13 @@ pipeline {
 
     stages {
 
+        stage('Checkout Code') {
+            steps {
+                echo "📥 Cloning Repository..."
+                git 'https://github.com/Raghav159/LifeLink'
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
                 echo "🐳 Building Backend Docker Image..."
